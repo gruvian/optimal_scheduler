@@ -1,5 +1,5 @@
 # optimalScheduler
-![](https://github.com/gruvian/optimalScheduler/blob/main/logo.png) <br />
+![](https://github.com/gruvian/optimalScheduler/blob/main/logoLight.png) <br />
 Optimal Scheduler is a simple productivity project developed for creating an optimal weekly schedule that maximizes productivity while prioritizing mental wellbeing.<br /> <br />
 While manual entry is possible, the program is designed to automatically create a timetable that prioritizes adequate sleep, working hours, personalized study hours per day for each subject 
 and time allocated for mental wellbeing. <br /> <br />
