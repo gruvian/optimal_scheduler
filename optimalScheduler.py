@@ -34,10 +34,12 @@ class Gui(QtWidgets.QWidget):
         self.grid.addWidget(self.logo, 0, 0)
 
 
-    def add_label(self, text: str, row: int, col: int):
+    def add_label(self, text: str, row: int, col: int, style=""):
         '''Adds Qlabel on grid'''
         label = QtWidgets.QLabel(text)
         label.setWordWrap(True)
+        if style != "":
+            label.setStyleSheet(style)
         self.grid.addWidget(label, row, col)
 
 
@@ -292,7 +294,7 @@ class Gui(QtWidgets.QWidget):
             for k in range(hours_worked):
                 work_time_slot = start_work_time.addSecs(k * 3600)  # Add each hour
                 row_index = work_time_slot.hour() - int(timetableJSON["wakeUpTime"].split(":")[0]) + 1  # Row index for the time
-                self.add_label("Work", row_index, j) 
+                self.add_label("Work", row_index, j, "background-color: #B4D6CD;")
             endOfWork.append(row_index)
         self.add_label("Saturday",0, 6)
         self.add_label("Sunday", 0, 7)
@@ -302,6 +304,8 @@ class Gui(QtWidgets.QWidget):
         study_courses = timetableJSON["semesterCourses"]
         i = 1 #start on monday
         k = 0
+        l = 0
+        colors = ["#FFDA76", "#FF8C9E", "#FF4E88", "#E9FF97", "#C3FF93", "#FFDB5C"]
         for course in study_courses:
             allocated_time = course["allocatedStudyHours"]
             remainingTime = 0
@@ -313,12 +317,13 @@ class Gui(QtWidgets.QWidget):
                 if slot > 11:
                     i+= 1
                     slot = endOfWork[k] + 2
-                self.add_label(course["courseName"], slot, i)
+                self.add_label(course["courseName"], slot, i, "background-color:"+colors[l]+";")
                 remainingTime += 1
                 slot += 1
             #switch to next day
             i += 1 
             k = 0
+            l+=1
 
         self.show()
 
