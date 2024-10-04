@@ -132,7 +132,6 @@ class Gui(QtWidgets.QWidget):
     def work_hours(self):
 
         self.clear_layout()
-        # Update JSON with wake-up time
         with open("timetable_data.json", "r") as f:
             timetable_json = json.load(f)
         timetable_json["wake_up_time"] = self.time_edit.time().toString()
@@ -176,7 +175,7 @@ class Gui(QtWidgets.QWidget):
         self.show()
 
     def university_course_input(self):
-        # Update JSON with hours worked each day
+        '''Load current semester load'''
         with open("timetable_data.json", "r") as f:
             timetable_json = json.load(f)
         hours = [x.value() for x in self.w_hours]
@@ -211,14 +210,13 @@ class Gui(QtWidgets.QWidget):
 
 
     def previous_courses(self):
-        """Handles saving previous semester's course information and updating the JSON file."""
-        # Get previous data
+        """Loads previous semester load"""
+
         for row in range(0, 6):
             self.courses[row] = self.courses[row].text()
             self.ects[row] = self.ects[row].text()
             self.ranking[row] = self.ranking[row].text()
-
-        # Update JSON with the semester data
+            
         with open("timetable_data.json", "r") as f:
             timetable_json = json.load(f)
         semester_courses = timetable_json["semester_courses"]
@@ -230,7 +228,6 @@ class Gui(QtWidgets.QWidget):
         with open("timetable_data.json", "w") as f:
             json.dump(timetable_json, f)
             
-        # Load the input interface for previous courses
         self.clear_layout()
 
         self.display_logo()
@@ -250,27 +247,23 @@ class Gui(QtWidgets.QWidget):
         self.show()
     
     def show_time_distribution(self):
-        '''Displays a bar chart showing the study hours needed for each course over 3 months'''
+        '''Displays a bar chart showing the study hours needed for each course over 1 semester length'''
         
-        # Load the timetable data from the JSON file
         with open("timetable_data.json", "r") as f:
             timetable_json = json.load(f)
 
-        # Extract course names and study hours from the data
         courses = [course["course_name"] for course in timetable_json["semester_courses"]]
         allocated_hours = [course["allocated_study_hours"] for course in timetable_json["semester_courses"]]
         total_hours = [x*17 for x in allocated_hours]
-        # Create a bar plot
+
         fig, ax = plt.subplots()
         ax.bar(courses, total_hours, color='skyblue')
 
-        # Customize the plot
         ax.set_title("Total study time over 3 months for each course")
         ax.set_xlabel("courses")
         ax.set_ylabel("total hours")
         plt.xticks(rotation=45, ha='right')
 
-        # Display the plot
         plt.tight_layout()
         plt.show()
     
@@ -294,34 +287,31 @@ class Gui(QtWidgets.QWidget):
 
         self.clear_layout()
 
-        # Create the timetable layout   
+ 
         days = ["monday", "tuesday", "wednesday", "thursday", "friday"]
         
         for i in range(1, 12):
             self.add_label(wake_up_time.toString("HH:mm"), i, 0)
-            wake_up_time = wake_up_time.addSecs(3600)  # Add one hour per row
+            wake_up_time = wake_up_time.addSecs(3600)
 
         end_of_work = []
         for j, day in enumerate(days, start=1):
-            self.add_label(day.capitalize(), 0, j)  # Day labels
+            self.add_label(day.capitalize(), 0, j)
 
             start_work_time = QtCore.QTime.fromString(timetable_json["start_work_hours_weekly"][day], "HH:mm:ss")
             hours_worked = timetable_json["hours_worked_weekly"][day]
 
-            # Populate work hours
             for k in range(hours_worked):
                 work_time_slot = start_work_time.addSecs(k * 3600)  # Add each hour
                 row_index = work_time_slot.hour() - int(timetable_json["wake_up_time"].split(":")[0]) + 1  # Row index for the time
                 self.add_label("Work", row_index, j, "background-color: #B4D6CD;")
             end_of_work.append(row_index)
 
-        # Add end of work for weekend (starting first thing in the morning)
         end_of_work.append(1)
         end_of_work.append(1)
         self.add_label("Saturday", 0, 6)
         self.add_label("Sunday", 0, 7)
 
-        # Schedule study sessions after the break
         study_courses = timetable_json["semester_courses"]
         i = 1  # Start on Monday
         k = 0
@@ -388,7 +378,6 @@ class Gui(QtWidgets.QWidget):
         with open("timetable_data.json", "r") as f:
             timetable_json = json.load(f)
 
-        # Allocate study time using the greedy algorithm
         allocated_courses = greedy_algorithm.allocate_study_time(timetable_json)
         return allocated_courses
 
