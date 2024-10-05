@@ -27,3 +27,8 @@ Python
 
 ### Prerequisites
 python3, PyQt5, matplotlib
+
+### Implementation
+Greedy algorithm solution per <a href="https://en.wikipedia.org/wiki/Activity_selection_problem">Activity selection problem</a>
+Weight adjustion per self-reported difficulty of task and past perfromance on similar tasks
+Data stored in JSON
