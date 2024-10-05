@@ -1,5 +1,7 @@
 # optimal_scheduler
 ![](https://github.com/gruvian/optimalScheduler/blob/main/logoLight.png) <br />
+Icon source:
+<a href="https://www.flaticon.com/free-icons/schedule" title="schedule icons">Schedule icons created by Senapedia - Flaticon</a>
 <br /> Optimal Scheduler is a simple productivity project developed for creating an optimal weekly schedule that maximizes productivity by automatically creating a work and study schedule. This project was created as a personal project. <br /> <br />
 ## Installation on Debian distros
 
