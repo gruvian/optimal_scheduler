@@ -142,9 +142,10 @@ class Gui(QtWidgets.QWidget):
         self.clear_layout()
         self.display_logo()
 
-        self.add_label("Welcome! What would you like to do today?", 1, 0)
-        self.add_button("Create new weekly schedule", 2, 0, self.create_new_schedule)
-        self.add_button("Open existing schedule", 3, 0, self.view_old_schedule)
+        self.add_label("Icon created by Senapedia - Flaticon", 1, 0)
+        self.add_label("Welcome! What would you like to do today?", 2, 0)
+        self.add_button("Create new weekly schedule", 3, 0, self.create_new_schedule)
+        self.add_button("Open existing schedule", 4, 0, self.view_old_schedule)
 
         if not os.path.exists(greedy_algorithm.resource_path("timetable_data.json")):
             with open(greedy_algorithm.resource_path("timetable_data.json"), "w") as f:
