@@ -1,53 +1,48 @@
 #!/bin/bash
 
-# root
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-
-if ! command -v python3 &>/dev/null; then
-    echo "Python 3 is not installed. Please install it first."
-    exit 1
+# Check if Python is installed
+if ! command -v python3 &> /dev/null
+then
+    echo "Python3 is not installed. Installing Python3..."
+    sudo apt update
+    sudo apt install -y python3
 fi
 
-#pip
-if ! command -v pip3 &>/dev/null; then
-    echo "pip is not installed. Please install it first."
-    exit 1
+# Check if pip is installed
+if ! command -v pip3 &> /dev/null
+then
+    echo "pip3 is not installed. Installing pip3..."
+    sudo apt install -y python3-pip
 fi
 
-#PyQt5
-if ! python3 -c "import PyQt5" &>/dev/null; then
-    echo "PyQt5 is not installed. Installing PyQt5..."
-    pip3 install PyQt5
-fi
+pip3 install matplotlib pyqt5
 
-#matplotlib
-if ! python3 -c "import matplotlib" &>/dev/null; then
-    echo "matplotlib is not installed. Installing matplotlib..."
-    pip3 install matplotlib
-fi
+# Define paths
+EXECUTABLE_PATH="./dist/optimal_scheduler"
+ICON_PATH="./icon.png"
+DESKTOP_FILE_PATH="$HOME/.local/share/applications/OptimalScheduler.desktop"
+INSTALL_DIR="$HOME/.local/share/OptimalScheduler"
 
-# directory for app
-mkdir -p "$HOME/.local/share/optimalScheduler"
+mkdir -p "$INSTALL_DIR"
 
-# cp files
-cp "$SCRIPT_DIR/logoLight.png" "$HOME/.local/share/optimalScheduler/"
-cp "$SCRIPT_DIR/logoDark.png" "$HOME/.local/share/optimalScheduler/"
-cp "$SCRIPT_DIR/night_theme.css" "$HOME/.local/share/optimalScheduler/"
-cp "$SCRIPT_DIR/day_theme.css" "$HOME/.local/share/optimalScheduler/"
-cp "$SCRIPT_DIR/icon.png" "$HOME/.local/share/optimalScheduler/"
+cp "$EXECUTABLE_PATH" "$INSTALL_DIR"
+cp "$ICON_PATH" "$INSTALL_DIR"
 
-# ubuntu desktop file
-cat <<EOF > "$HOME/.local/share/applications/optimalScheduler.desktop"
+#debian .desktop file
+cat > "$DESKTOP_FILE_PATH" <<EOL
 [Desktop Entry]
-Version=1.0
-Type=Application
 Name=Optimal Scheduler
-Exec=python3 "$SCRIPT_DIR/optimal_scheduler.py"
-Icon=$HOME/.local/share/optimalScheduler/icon.png
+Exec=$INSTALL_DIR/optimal_scheduler
+Icon=$INSTALL_DIR/icon.png
+Type=Application
 Terminal=false
 Categories=Utility;
-EOF
+EOL
 
-chmod +x "$HOME/.local/share/applications/optimalScheduler.desktop"
+
+chmod +x "$DESKTOP_FILE_PATH"
+
+echo "Launching Optimal Scheduler..."
+$INSTALL_DIR/optimal_scheduler
 
 echo "Installation complete."

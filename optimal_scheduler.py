@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 import subprocess
 
 import matplotlib.pyplot as plt
@@ -9,6 +10,20 @@ from PyQt5.QtGui import QPixmap
 
 import greedy_algorithm
 
+import sys
+import os
+
+
+def resource_path(relative_path):
+    """ PyInstaller paths """
+    try:
+        base_path = sys._MEIPASS
+    except AttributeError:
+        base_path = os.path.dirname(__file__)
+
+    return os.path.join(base_path, relative_path)
+
+previous_performance_path = resource_path('previous_performance.json')
 
 def get_default_schedule():
     """Creates default timetable JSON when new template creation
@@ -32,7 +47,7 @@ def get_default_schedule():
 
 def create_course_optimized_schedule():
     """Allocates study time using the greedy algorithm and updates the schedule."""
-    with open("timetable_data.json", "r") as f:
+    with open(resource_path("timetable_data.json"), "r") as f:
         timetable_json = json.load(f)
 
     # Allocate study time using the greedy algorithm
@@ -75,7 +90,7 @@ class Gui(QtWidgets.QWidget):
         self.setWindowTitle("Optimal Scheduler")
         self.dark_mode_flag = self.detect_dark_mode_gnome()
         theme = 'night_theme.css' if self.dark_mode_flag else 'day_theme.css'
-        self.setStyleSheet(open(theme).read())
+        self.setStyleSheet(open(resource_path("night_theme.css")).read())
         self.grid = QtWidgets.QGridLayout()
         self.setLayout(self.grid)
         self.grid.setSpacing(10)
@@ -94,9 +109,9 @@ class Gui(QtWidgets.QWidget):
         """Displays logo on grid"""
         self.logo = QtWidgets.QLabel()
         if self.dark_mode_flag:
-            self.pixmap = QPixmap('logoDark.png')
+            self.pixmap = QPixmap(resource_path("logoDark.png"))
         else:
-            self.pixmap = QPixmap('logoLight.png')
+            self.pixmap = QPixmap(resource_path("logoLight.png"))
         self.logo.setPixmap(self.pixmap)
         self.grid.addWidget(self.logo, 0, 0)
 
@@ -144,8 +159,8 @@ class Gui(QtWidgets.QWidget):
         self.add_button("Create new weekly schedule", 2, 0, self.create_new_schedule)
         self.add_button("Open existing schedule", 3, 0, self.view_old_schedule)
 
-        if not os.path.exists("timetable_data.json"):
-            with open("timetable_data.json", "w") as f:
+        if not os.path.exists(resource_path("timetable_data.json")):
+            with open(resource_path("timetable_data.json"), "w") as f:
                 f.write(json.dumps(get_default_schedule()))
         self.show()
 
@@ -173,10 +188,10 @@ class Gui(QtWidgets.QWidget):
 
         self.clear_layout()
         # Update JSON with wake-up time
-        with open("timetable_data.json", "r") as f:
+        with open(resource_path("timetable_data.json"), "r") as f:
             timetable_json = json.load(f)
         timetable_json["wake_up_time"] = self.time_edit.time().toString()
-        with open("timetable_data.json", "w") as f:
+        with open(resource_path("timetable_data.json"), "w") as f:
             json.dump(timetable_json, f)
 
         self.display_logo()
@@ -217,7 +232,7 @@ class Gui(QtWidgets.QWidget):
 
     def university_course_input(self):
         # Update JSON with hours worked each day
-        with open("timetable_data.json", "r") as f:
+        with open(resource_path("timetable_data.json"), "r") as f:
             timetable_json = json.load(f)
         hours = [x.value() for x in self.w_hours]
         i = 0
@@ -228,7 +243,7 @@ class Gui(QtWidgets.QWidget):
             time_str = time.toString()
             timetable_json["start_work_hours_weekly"][day] = time_str
             i += 1
-        with open("timetable_data.json", "w") as f:
+        with open(resource_path("timetable_data.json"), "w") as f:
             json.dump(timetable_json, f)
 
         self.clear_layout()
@@ -258,7 +273,7 @@ class Gui(QtWidgets.QWidget):
             self.ranking[row] = self.ranking[row].text()
 
         # Update JSON with the semester data
-        with open("timetable_data.json", "r") as f:
+        with open(resource_path("timetable_data.json"), "r") as f:
             timetable_json = json.load(f)
         semester_courses = timetable_json["semester_courses"]
         for i in range(6):
@@ -266,7 +281,7 @@ class Gui(QtWidgets.QWidget):
             semester_courses[i]["ECTS"] = int(self.ects[i])
             semester_courses[i]["personal_ranking"] = self.ranking[i]
         timetable_json["semester_courses"] = semester_courses
-        with open("timetable_data.json", "w") as f:
+        with open(resource_path("timetable_data.json"), "w") as f:
             json.dump(timetable_json, f)
 
         # Load the input interface for previous courses
@@ -294,7 +309,7 @@ class Gui(QtWidgets.QWidget):
         filename, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save Timetable", "",
                                                             "JSON Files (*.json);;All Files (*)", options=options)
         if filename:
-            with open("timetable_data.json", "r") as f:
+            with open(resource_path("timetable_data.json"), "r") as f:
                 timetable_json = json.load(f)
             with open(filename + ".json", "w") as f:
                 json.dump(timetable_json, f)
@@ -308,7 +323,7 @@ class Gui(QtWidgets.QWidget):
 
         self.clear_layout()
 
-        # Create the timetable layout
+        # Create the timetable layout   
         days = ["monday", "tuesday", "wednesday", "thursday", "friday"]
 
         for i in range(1, 12):
@@ -374,12 +389,12 @@ class Gui(QtWidgets.QWidget):
             performance_json.append(
                 {"course_name": self.courses[row].text(), "ECTS": int(ects), "grade": float(self.grades[row].text())})
 
-        with open("previous_performance.json", "w") as f:
+        with open(previous_performance_path, "w") as f:
             json.dump(performance_json, f)
 
         create_course_optimized_schedule()
 
-        self.display_schedule("timetable_data.json")
+        self.display_schedule(resource_path("timetable_data.json"))
 
     def display_old_schedule(self):
         """Loads and displays an old schedule from the provided JSON file path."""
@@ -394,7 +409,7 @@ class Gui(QtWidgets.QWidget):
         self.add_label(
             "Please input the path to the .JSON file automatically created after you've saved your timetable.", 1, 0)
         self.add_label("PATH:", 2, 0)
-        self.path_to_json = self.add_line_edit("timetable_data.json", 3, 0)
+        self.path_to_json = self.add_line_edit(resource_path("timetable_data.json"), 3, 0)
         self.path_to_json.setFixedWidth(500)
         self.add_button("View", 3, 2, self.display_old_schedule)
         self.add_button("Back", 3, 1, self.init_gui)
@@ -404,9 +419,9 @@ class Gui(QtWidgets.QWidget):
         """Displays an error message for a missing JSON file."""
         self.dark_mode_flag = self.detect_dark_mode_gnome()
         if self.dark_mode_flag:
-            self.setStyleSheet(open('night_theme.css').read())
+            self.setStyleSheet(open(resource_path("night_theme.css")).read())
         else:
-            self.setStyleSheet(open('day_theme.css').read())
+            self.setStyleSheet(open(resource_path("light_theme.css")).read())
 
         alert = QtWidgets.QMessageBox()
         alert.setWindowTitle("Oops!")
