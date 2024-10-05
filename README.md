@@ -29,6 +29,6 @@ Python
 python3, PyQt5, matplotlib
 
 ### Implementation
-Greedy algorithm solution
+Greedy algorithm solution <br />
 Weight adjustion per self-reported difficulty of task and past perfromance on similar tasks <br />
 Data stored in JSON
