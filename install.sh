@@ -31,6 +31,7 @@ Categories=Utility;
 EOL
 
 chmod +x "$DESKTOP_FILE_PATH"
+chmod +x "$INSTALL_DIR/optimal_scheduler"
 
 echo "Launching Optimal Scheduler..."
 $INSTALL_DIR/optimal_scheduler
