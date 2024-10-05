@@ -21,7 +21,7 @@ if [ -d "$EXECUTABLE_DIR" ]; then
 [Desktop Entry]
 Name=Optimal Scheduler
 Exec=$INSTALL_DIR/optimal_scheduler
-Icon=$INSTALL_DIR/logoLight.png
+Icon=$INSTALL_DIR/icon.png
 Type=Application
 Terminal=false
 Categories=Utility;
