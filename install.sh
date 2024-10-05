@@ -1,27 +1,38 @@
 #!/bin/bash
 
-# directory for app
-mkdir -p "$HOME/.local/share/optimalScheduler"
+BASE_PATH=$(pwd)
+EXECUTABLE_PATH="$BASE_PATH/dist/optimal_scheduler"
+ICON_PATH="$BASE_PATH/icon.png"
+DESKTOP_FILE_PATH="$HOME/.local/share/applications/OptimalScheduler.desktop"
+INSTALL_DIR="$HOME/.local/share/OptimalScheduler"
 
-# cp files
-cp "$SCRIPT_DIR/logoLight.png" "$HOME/.local/share/optimalScheduler/"
-cp "$SCRIPT_DIR/logoDark.png" "$HOME/.local/share/optimalScheduler/"
-cp "$SCRIPT_DIR/night_theme.css" "$HOME/.local/share/optimalScheduler/"
-cp "$SCRIPT_DIR/day_theme.css" "$HOME/.local/share/optimalScheduler/"
-cp "$SCRIPT_DIR/icon.png" "$HOME/.local/share/optimalScheduler/"
+if [ ! -f "$EXECUTABLE_PATH" ]; then
+    echo "Error: Executable not found at $EXECUTABLE_PATH"
+    exit 1
+fi
 
-# ubuntu desktop file
-cat <<EOF > "$HOME/.local/share/applications/optimalScheduler.desktop"
+if [ ! -f "$ICON_PATH" ]; then
+    echo "Error: Icon not found at $ICON_PATH"
+    exit 1
+fi
+
+mkdir -p "$INSTALL_DIR"
+cp "$EXECUTABLE_PATH" "$INSTALL_DIR"
+cp "$ICON_PATH" "$INSTALL_DIR"
+
+cat > "$DESKTOP_FILE_PATH" <<EOL
 [Desktop Entry]
-Version=1.0
-Type=Application
 Name=Optimal Scheduler
-Exec=python3 "$SCRIPT_DIR/optimal_scheduler.py"
-Icon=$HOME/.local/share/optimalScheduler/icon.png
+Exec=$INSTALL_DIR/optimal_scheduler
+Icon=$INSTALL_DIR/icon.png
+Type=Application
 Terminal=false
 Categories=Utility;
-EOF
+EOL
 
-chmod +x "$HOME/.local/share/applications/optimalScheduler.desktop"
+chmod +x "$DESKTOP_FILE_PATH"
+
+echo "Launching Optimal Scheduler..."
+$INSTALL_DIR/optimal_scheduler
 
 echo "Installation complete."
