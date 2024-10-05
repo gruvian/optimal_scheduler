@@ -1,6 +1,18 @@
 import json
+import sys
+import os
 from math import ceil
 from operator import itemgetter
+
+
+def resource_path(relative_path):
+    """ PyInstaller paths """
+    try:
+        base_path = sys._MEIPASS
+    except AttributeError:
+        base_path = os.path.dirname(__file__)
+
+    return os.path.join(base_path, relative_path)
 
 
 def calculate_total_available_hours(timetableJSON):
@@ -33,7 +45,7 @@ def allocate_study_time(timetableJSON):
     semester_courses = timetableJSON["semester_courses"]
 
     # Load past performance data
-    with open("previous_performance.json", "r") as f:
+    with open(resource_path("previous_performance.json"), "r") as f:
         performanceJSON = json.load(f)
 
     # Calculate total available hours
@@ -59,7 +71,7 @@ def allocate_study_time(timetableJSON):
     timetableJSON["semester_courses"] = sorted_courses
 
     # Update JSON
-    with open("timetable_data.json", "w") as f:
+    with open(resource_path("timetable_data.json"), "w") as f:
         json.dump(timetableJSON, f, indent=4)
 
     return sorted_courses
