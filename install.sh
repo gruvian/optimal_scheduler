@@ -1,21 +1,5 @@
 #!/bin/bash
 
-# Check if Python is installed
-if ! command -v python3 &> /dev/null
-then
-    echo "Python3 is not installed. Installing Python3..."
-    sudo apt update
-    sudo apt install -y python3
-fi
-
-# Check if pip is installed
-if ! command -v pip3 &> /dev/null
-then
-    echo "pip3 is not installed. Installing pip3..."
-    sudo apt install -y python3-pip
-fi
-
-pip3 install matplotlib pyqt5
 
 # Define paths
 EXECUTABLE_PATH="./dist/optimal_scheduler"

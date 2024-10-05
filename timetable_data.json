@@ -1,0 +1,67 @@
+{
+    "wake_up_time": "08:00:00",
+    "hours_worked_weekly": {
+        "monday": 4,
+        "tuesday": 4,
+        "wednesday": 4,
+        "thursday": 4,
+        "friday": 4
+    },
+    "start_work_hours_weekly": {
+        "monday": "09:00:00",
+        "tuesday": "09:00:00",
+        "wednesday": "09:00:00",
+        "thursday": "09:00:00",
+        "friday": "09:00:00"
+    },
+    "semester_courses": [
+        {
+            "course_name": "Course 1",
+            "ECTS": 5,
+            "group": "",
+            "personal_ranking": "1",
+            "ranking": 5.0,
+            "allocated_study_hours": 3
+        },
+        {
+            "course_name": "Course 2",
+            "ECTS": 5,
+            "group": "",
+            "personal_ranking": "1",
+            "ranking": 5.0,
+            "allocated_study_hours": 3
+        },
+        {
+            "course_name": "Course 3",
+            "ECTS": 5,
+            "group": "",
+            "personal_ranking": "1",
+            "ranking": 5.0,
+            "allocated_study_hours": 3
+        },
+        {
+            "course_name": "Course 4",
+            "ECTS": 5,
+            "group": "",
+            "personal_ranking": "1",
+            "ranking": 5.0,
+            "allocated_study_hours": 3
+        },
+        {
+            "course_name": "Course 5",
+            "ECTS": 5,
+            "group": "",
+            "personal_ranking": "1",
+            "ranking": 5.0,
+            "allocated_study_hours": 3
+        },
+        {
+            "course_name": "Course 6",
+            "ECTS": 5,
+            "group": "",
+            "personal_ranking": "1",
+            "ranking": 5,
+            "allocated_study_hours": 3
+        }
+    ]
+}
